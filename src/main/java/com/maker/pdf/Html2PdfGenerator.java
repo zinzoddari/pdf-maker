@@ -1,20 +1,17 @@
 package com.maker.pdf;
 
 import com.lowagie.text.pdf.BaseFont;
-import com.maker.pdf.converter.TemplateVariableConverter;
 import com.maker.pdf.template.TemplateManager;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
 
 public class Html2PdfGenerator {
 
     private static final String FONT_PATH = "src/main/resources/fonts/NanumGothic.ttf";
 
-    private TemplateManager templateManager;
+    private final TemplateManager templateManager;
 
     public Html2PdfGenerator(TemplateManager templateManager) {
         this.templateManager = templateManager;

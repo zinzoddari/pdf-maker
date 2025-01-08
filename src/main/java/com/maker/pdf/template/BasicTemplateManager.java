@@ -1,12 +1,13 @@
 package com.maker.pdf.template;
 
-
-import com.maker.pdf.converter.TemplateVariableConverter;
-
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+/**
+ * HTML 내 `{{variable}}` 형식으로 작성된 문자열을 데이터 값으로 치환해줍니다.
+ */
 public class BasicTemplateManager implements TemplateManager {
 
     @Override
@@ -23,6 +24,23 @@ public class BasicTemplateManager implements TemplateManager {
             return template;
         }
 
-        return TemplateVariableConverter.convert(template, data);
+        return convert(template, data, data.getClass());
+    }
+
+    private <T> String convert(String template, final T data, final Class<?> clazz) {
+        for (Field field : clazz.getDeclaredFields()) {
+            field.setAccessible(true);
+            Object value = null;
+            try {
+                value = field.get(data);
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e);
+            }
+            if (value != null) {
+                template = template.replace("{{" + field.getName() + "}}", value.toString());
+            }
+        }
+
+        return template;
     }
 }

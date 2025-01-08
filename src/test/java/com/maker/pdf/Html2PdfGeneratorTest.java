@@ -4,8 +4,6 @@ import com.maker.pdf.example.User;
 import com.maker.pdf.template.BasicTemplateManager;
 import com.maker.pdf.template.FreemarkerTemplateManager;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -16,7 +14,7 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class Html2PdfGeneratorTest {
@@ -25,7 +23,7 @@ class Html2PdfGeneratorTest {
 
     @AfterEach
     void after() throws IOException {
-        //Files.delete(Path.of(PDF_PATH));
+        Files.delete(Path.of(PDF_PATH));
     }
 
     @Test
@@ -33,8 +31,8 @@ class Html2PdfGeneratorTest {
     void freemarkerDownload() throws IOException {
         Html2PdfGenerator generator = new Html2PdfGenerator(new FreemarkerTemplateManager());
 
-        final User user = new User("반갑습니다");
-        final String template = "src/main/resources/template/freemarkerReceipt.ftl";
+        final User user = new User("반갑습니다zzz");
+        final String template = "src/main/resources/template/freemarkerReceipt.html";
         OutputStream outputStream = new FileOutputStream(PDF_PATH);
 
         //when

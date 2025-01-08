@@ -9,6 +9,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
 
+/**
+ * Freemarker 형식으로 작성된 HTML 코드를 데이터로 변환합니다.
+ */
 public class FreemarkerTemplateManager implements TemplateManager {
     private final Configuration configuration = new Configuration(Configuration.DEFAULT_INCOMPATIBLE_IMPROVEMENTS);
 
@@ -32,10 +35,11 @@ public class FreemarkerTemplateManager implements TemplateManager {
     }
 
     private Template loadTemplate(final File templateFile) throws IOException {
-        File templateDirectory = templateFile.getParentFile();
-        String templateName = templateFile.getName();
+        final File templateDirectory = templateFile.getParentFile();
+        final String templateName = templateFile.getName();
 
         configuration.setTemplateLoader(new FileTemplateLoader(templateDirectory));
+
         return configuration.getTemplate(templateName);
     }
 }
