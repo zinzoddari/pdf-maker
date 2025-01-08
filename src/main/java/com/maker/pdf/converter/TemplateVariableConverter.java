@@ -3,11 +3,16 @@ package com.maker.pdf.converter;
 import java.lang.reflect.Field;
 
 public class TemplateVariableConverter {
-    public static <T> String convert(String template, T data) throws IllegalAccessException {
+    public static <T> String convert(String template, T data) {
         Class<?> clazz = data.getClass();
         for (Field field : clazz.getDeclaredFields()) {
-            field.setAccessible(true); // private 필드 접근 허용
-            Object value = field.get(data); // 필드 값 가져오기
+            field.setAccessible(true);
+            Object value = null;
+            try {
+                value = field.get(data);
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e);
+            }
             if (value != null) {
                 template = template.replace("{{" + field.getName() + "}}", value.toString());
             }

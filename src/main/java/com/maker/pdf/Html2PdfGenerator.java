@@ -2,6 +2,7 @@ package com.maker.pdf;
 
 import com.lowagie.text.pdf.BaseFont;
 import com.maker.pdf.converter.TemplateVariableConverter;
+import com.maker.pdf.template.TemplateManager;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
 import java.io.IOException;
@@ -13,30 +14,22 @@ public class Html2PdfGenerator {
 
     private static final String FONT_PATH = "src/main/resources/fonts/NanumGothic.ttf";
 
+    private TemplateManager templateManager;
+
+    public Html2PdfGenerator(TemplateManager templateManager) {
+        this.templateManager = templateManager;
+    }
+
     public <T> void create(final String templatePath, final OutputStream outputStream, T data) {
-        String fileContent = loadTemplate(templatePath, data);
+        String fileContent = templateManager.load(templatePath, data);
 
         generate(fileContent, outputStream);
     }
 
     public void create(final String templatePath, final OutputStream outputStream) {
-        String fileContent = loadTemplate(templatePath, null);
+        String fileContent = templateManager.load(templatePath, null);
 
         generate(fileContent, outputStream);
-    }
-
-    private <T> String loadTemplate(String templatePath, T data) {
-        try {
-            String fileContent = Files.readString(Path.of(templatePath));
-
-            if (data != null) {
-                fileContent = TemplateVariableConverter.convert(fileContent, data);
-            }
-
-            return fileContent;
-        } catch (IOException | IllegalAccessException e) {
-            throw new RuntimeException("Failed to load or process template: " + templatePath, e);
-        }
     }
 
     private void generate(final String content, final OutputStream outputStream) {
