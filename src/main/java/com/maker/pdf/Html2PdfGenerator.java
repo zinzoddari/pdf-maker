@@ -1,6 +1,7 @@
 package com.maker.pdf;
 
 import com.lowagie.text.pdf.BaseFont;
+import com.maker.pdf.converter.TemplateVariableConverter;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
 import java.io.IOException;
@@ -12,18 +13,33 @@ public class Html2PdfGenerator {
 
     private static final String FONT_PATH = "src/main/resources/fonts/NanumGothic.ttf";
 
+    public <T> void create(final String templatePath, final OutputStream outputStream, T data) {
+        String fileContent = loadTemplate(templatePath, data);
+
+        generate(fileContent, outputStream);
+    }
+
     public void create(final String templatePath, final OutputStream outputStream) {
+        String fileContent = loadTemplate(templatePath, null);
 
-        String fileContent = null;
+        generate(fileContent, outputStream);
+    }
 
+    private <T> String loadTemplate(String templatePath, T data) {
         try {
-            fileContent = Files.readString(Path.of(templatePath));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+            String fileContent = Files.readString(Path.of(templatePath));
+
+            if (data != null) {
+                fileContent = TemplateVariableConverter.convert(fileContent, data);
+            }
+
+            return fileContent;
+        } catch (IOException | IllegalAccessException e) {
+            throw new RuntimeException("Failed to load or process template: " + templatePath, e);
         }
+    }
 
-        assert fileContent != null;
-
+    private void generate(final String content, final OutputStream outputStream) {
         ITextRenderer renderer = new ITextRenderer();
 
         try {
@@ -36,7 +52,7 @@ public class Html2PdfGenerator {
             throw new RuntimeException("폰트를 읽어오는데 실패하였습니다.", e);
         }
 
-        renderer.setDocumentFromString(fileContent);
+        renderer.setDocumentFromString(content);
         renderer.layout();
         renderer.createPDF(outputStream);
     }

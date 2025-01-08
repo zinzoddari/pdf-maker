@@ -1,5 +1,6 @@
 package com.maker.pdf;
 
+import com.maker.pdf.example.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,6 +31,22 @@ class Html2PdfGeneratorTest {
     @AfterEach
     void after() throws IOException {
         Files.delete(Path.of(PDF_PATH));
+    }
+
+    @Test
+    @DisplayName("데이터와 함께 HTML을 PDF로 생성합니다.")
+    void downloadWithData() throws IOException {
+        //given
+        final User user = new User("홍길동");
+        final String template = "src/main/resources/template/receipt.html";
+        OutputStream outputStream = new FileOutputStream(PDF_PATH);
+
+        //when
+        generator.create(template, outputStream, user);
+
+        //then
+        assertTrue(Files.exists(Path.of(template)));
+        outputStream.close();
     }
 
     @Test
