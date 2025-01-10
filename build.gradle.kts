@@ -20,6 +20,9 @@ dependencies {
 
     // template engine
     implementation("org.freemarker:freemarker:2.3.34")
+
+    // Encryption, 템플릿 생성시, 암호화 처리에 필요.
+    implementation("org.bouncycastle:bcprov-jdk18on:1.79")
 }
 
 tasks.test {
