@@ -30,3 +30,16 @@ tasks.test {
     useJUnitPlatform()
 }
 
+publishing {
+    publications {
+        create<MavenPublication>("release") {
+            groupId = group.toString()
+            artifactId = "pdf-maker"
+            version = version.toString()
+
+            afterEvaluate {
+                from(components["java"])
+            }
+        }
+    }
+}
