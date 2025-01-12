@@ -1,6 +1,5 @@
 package com.maker.pdf.maker;
 
-import com.maker.pdf.Html2PdfGenerator;
 import com.maker.pdf.example.User;
 import com.maker.pdf.template.FreemarkerTemplateManager;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,15 +28,20 @@ class PdfMakerFactoryTest {
     @Test
     @DisplayName("PdfMaker를 이용해 암호를 설정해 PDF를 생성합니다.")
     void freemarkerDownload() throws IOException {
+        //given
         final User user = new User("홍길동이");
         final String template = "src/main/resources/template/freemarkerReceipt.html";
 
+        PdfMaker pdfMaker = pdfMakerFactory.create()
+                .withTemplatePath(template)
+                .withData(user)
+                .withOwnerPassword("1234")
+                .withUserPassword("1234")
+                .build();
+
+        //when
         try (OutputStream outputStream = new FileOutputStream(PDF_PATH)) {
-            pdfMakerFactory.create()
-                    .withData(user)
-                    .withOwnerPassword("1234")
-                    .withUserPassword("1234")
-                    .build(template, outputStream);
+            pdfMaker.generate(outputStream);
         }
 
         assertTrue(Files.exists(Path.of(template)));

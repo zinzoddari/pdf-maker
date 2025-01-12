@@ -14,7 +14,7 @@ public class PdfMakerFactory {
         this.templateManager = templateManager;
     }
 
-    public <T> PdfMakerBuilder<T> create() {
-        return PdfMakerBuilder.builder(templateManager);
+    public <T> PdfMaker<T> create() {
+        return PdfMaker.builder(templateManager);
     }
 }

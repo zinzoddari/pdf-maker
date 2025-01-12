@@ -11,9 +11,11 @@ import java.io.OutputStream;
 
 import static com.lowagie.text.pdf.PdfWriter.STANDARD_ENCRYPTION_128;
 
-public class PdfMakerBuilder<T> {
+public class PdfMaker<T> {
 
     private static final String FONT_PATH = "src/main/resources/fonts/NanumGothic.ttf";
+
+    private String templatePath;
 
     private T data;
 
@@ -25,7 +27,7 @@ public class PdfMakerBuilder<T> {
 
     private final TemplateManager templateManager;
 
-    private PdfMakerBuilder(TemplateManager templateManager) {
+    private PdfMaker(TemplateManager templateManager) {
         if (templateManager == null) {
             throw new IllegalArgumentException("TemplateManager는 null일 수 없습니다.");
         }
@@ -33,44 +35,46 @@ public class PdfMakerBuilder<T> {
         this.templateManager = templateManager;
     }
 
-    public static <T> PdfMakerBuilder<T> builder(TemplateManager templateManager) {
-        return new PdfMakerBuilder<>(templateManager);
+    public static <T> PdfMaker<T> builder(TemplateManager templateManager) {
+        return new PdfMaker<>(templateManager);
     }
 
-    public PdfMakerBuilder<T> withData(final T data) {
+    public PdfMaker<T> withTemplatePath(final String templatePath) {
+        this.templatePath = templatePath;
+        return this;
+    }
+
+    public PdfMaker<T> withData(final T data) {
         this.data = data;
         return this;
     }
 
-    public PdfMakerBuilder<T> withUserPassword(final String userPassword) {
+    public PdfMaker<T> withUserPassword(final String userPassword) {
         this.userPassword = userPassword;
         return this;
     }
 
-    public PdfMakerBuilder<T> withOwnerPassword(final String ownerPassword) {
+    public PdfMaker<T> withOwnerPassword(final String ownerPassword) {
         this.ownerPassword = ownerPassword;
         return this;
     }
 
-    public PdfMakerBuilder<T> withPermissions(final int permissions) {
+    public PdfMaker<T> withPermissions(final int permissions) {
         this.permissions = permissions;
         return this;
     }
 
-    public void build(final String templatePath, OutputStream outputStream) {
-        if (outputStream == null) {
-            throw new IllegalArgumentException("OutputStream은 null일 수 없습니다.");
+    public PdfMaker<T> build() {
+        if (templatePath == null) {
+            throw new IllegalArgumentException("템플릿 경로는 필수입니다.");
         }
 
-        if (templatePath == null || templatePath.isBlank()) {
-            throw new IllegalStateException("템플릿 경로가 설정되지 않았습니다.");
-        }
-
-        final String fileContent = templateManager.load(templatePath, data);
-        generate(fileContent, outputStream);
+        return this;
     }
 
-    private void generate(final String content, final OutputStream outputStream) {
+    public void generate(final OutputStream outputStream) {
+        final String content = templateManager.load(templatePath, data);
+
         ITextRenderer renderer = new ITextRenderer();
 
         try {
