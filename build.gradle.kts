@@ -1,5 +1,6 @@
 plugins {
     id("java")
+    id("maven-publish")
 }
 
 group = "com.maker.pdf"
@@ -28,3 +29,4 @@ dependencies {
 tasks.test {
     useJUnitPlatform()
 }
+
