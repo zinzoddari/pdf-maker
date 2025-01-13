@@ -1,6 +1,11 @@
+import com.github.jk1.license.filter.ExcludeTransitiveDependenciesFilter
+import com.github.jk1.license.filter.LicenseBundleNormalizer
+import com.github.jk1.license.render.JsonReportRenderer
+
 plugins {
     id("java")
     id("maven-publish")
+    id("com.github.jk1.dependency-license-report") version "2.9"
 }
 
 group = "com.maker.pdf"
@@ -24,6 +29,8 @@ dependencies {
 
     // Encryption, 템플릿 생성시, 암호화 처리에 필요.
     implementation("org.bouncycastle:bcprov-jdk18on:1.79")
+
+    implementation("com.itextpdf:itextpdf:5.5.13.4")
 }
 
 tasks.test {
@@ -42,4 +49,10 @@ publishing {
             }
         }
     }
+}
+
+licenseReport {
+    unionParentPomLicenses = false
+    allowedLicensesFile = File("$projectDir/config/allowed-licenses.json")
+    renderers = arrayOf(JsonReportRenderer("check-license-details.json"))
 }
