@@ -73,7 +73,6 @@ public class Main {
 `pdf-maker`는 다음 라이브러리를 사용하였습니다.
 - [flying-saucer-pdf](https://github.com/flyingsaucerproject/flyingsaucer): HTML과 CSS 기반 PDF 생성
 - [Freemarker](https://github.com/apache/freemarker): 템플릿 엔진
-  기여
 
 # 기여
 이 프로젝트에 기여하려면 이슈를 생성하거나 풀 리퀘스트를 제출해주세요. 기여는 언제나 환영입니다. 😁
